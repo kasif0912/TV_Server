@@ -1,4 +1,3 @@
-const USER = require("../models/user.schema");
 const otpGenerator = require("otp-generator");
 const twilio = require("twilio");
 const OTPLogin = require("../models/user.schema");
@@ -80,17 +79,20 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-const getUser = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
-    const validUser = await USER.findOne({ _id: req.userID });
-    if (!validUser) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    return res.status(200).json(validUser);
+    const users = await OTPLogin.find({});
+    return res.status(200).json({
+      success: true,
+      data: users,
+    });
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
     console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
 
-module.exports = { verifyOtp, getUser, sendOtp };
+module.exports = { verifyOtp,getAllUsers, sendOtp };
