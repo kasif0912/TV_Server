@@ -21,6 +21,7 @@ router.post(
   mediaController.createMedia
 );
 
+router.get("/allMedia", mediaController.getAllMediaData);
 // Get media by language
 router.get("/by-language", mediaController.getMediaByLanguage);
 

@@ -75,6 +75,17 @@ const getMediaByLanguage = async (req, res) => {
   }
 };
 
+// get all media data
+const getAllMediaData = async (req, res) => {
+  try {
+    const media = await Media.find(); // fetch all documents from the Media collection
+    res.status(200).json(media);
+  } catch (error) {
+    console.error("Error fetching media data:", error);
+    res.status(500).json({ message: "Failed to retrieve media data" });
+  }
+};
+
 const getMediaByCategory = async (req, res) => {
   try {
     let { category } = req.query;
@@ -95,4 +106,9 @@ const getMediaByCategory = async (req, res) => {
   }
 };
 
-module.exports = { createMedia, getMediaByLanguage, getMediaByCategory };
+module.exports = {
+  createMedia,
+  getMediaByLanguage,
+  getMediaByCategory,
+  getAllMediaData,
+};
