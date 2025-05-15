@@ -3,11 +3,21 @@ const { uploadOnCloudinary } = require("../utils/cloudinary");
 
 const createMedia = async (req, res) => {
   try {
-    const { title, description, categories, languages, cast, releaseYear, rating } = req.body;
+    const {
+      title,
+      description,
+      categories,
+      languages,
+      cast,
+      releaseYear,
+      rating,
+    } = req.body;
 
     // Check files
     if (!req.files || !req.files.banner || !req.files.video) {
-      return res.status(400).json({ error: "Banner and video files are required" });
+      return res
+        .status(400)
+        .json({ error: "Banner and video files are required" });
     }
 
     const bannerFile = req.files.banner[0];
@@ -18,7 +28,9 @@ const createMedia = async (req, res) => {
     const videoUpload = await uploadOnCloudinary(videoFile.path);
 
     if (!bannerUpload || !videoUpload) {
-      return res.status(500).json({ error: "Failed to upload media to Cloudinary" });
+      return res
+        .status(500)
+        .json({ error: "Failed to upload media to Cloudinary" });
     }
 
     // Create media entry
@@ -43,4 +55,44 @@ const createMedia = async (req, res) => {
   }
 };
 
-module.exports = { createMedia };
+// get media by language
+const getMediaByLanguage = async (req, res) => {
+  try {
+    const { language } = req.query;
+
+    if (!language) {
+      return res.status(400).json({ error: "Language parameter is required" });
+    }
+
+    const mediaList = await Media.find({
+      languages: { $in: [language] },
+    });
+
+    res.status(200).json({ success: true, media: mediaList });
+  } catch (error) {
+    console.error("Get Media By Language Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getMediaByCategory = async (req, res) => {
+  try {
+    let { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({ error: "Category parameter is required" });
+    }
+
+    category = category.trim();
+
+    // Query MongoDB directly to filter by category
+    const mediaList = await Media.find({ categories: category });
+
+    res.status(200).json({ success: true, media: mediaList });
+  } catch (error) {
+    console.error("Get Media By Category Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { createMedia, getMediaByLanguage, getMediaByCategory };
