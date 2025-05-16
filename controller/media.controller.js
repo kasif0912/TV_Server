@@ -17,7 +17,7 @@ const createMedia = async (req, res) => {
     if (!req.files || !req.files.banner || !req.files.video || !req.files.thumbnail) {
       return res
         .status(400)
-        .json({ error: "Banner and video files are required" });
+        .json({ error: "Banner, video and thumbnail files are required" });
     }
 
     const bannerFile = req.files.banner[0];
