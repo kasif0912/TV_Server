@@ -16,7 +16,7 @@ const mediaSchema = new mongoose.Schema(
       required: true,
     },
     thumbnail: {
-      type: String, // URL to the banner image
+      type: String, // URL to the thumbnail image
       required: true,
     },
     video: {
