@@ -17,6 +17,7 @@ router.post(
   upload.fields([
     { name: "banner", maxCount: 1 },
     { name: "video", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 },
   ]),
   mediaController.createMedia
 );

@@ -14,7 +14,7 @@ const createMedia = async (req, res) => {
     } = req.body;
 
     // Check files
-    if (!req.files || !req.files.banner || !req.files.video) {
+    if (!req.files || !req.files.banner || !req.files.video || !req.files.thumbnail) {
       return res
         .status(400)
         .json({ error: "Banner and video files are required" });
@@ -22,12 +22,14 @@ const createMedia = async (req, res) => {
 
     const bannerFile = req.files.banner[0];
     const videoFile = req.files.video[0];
+    const thumbnail = req.files.thumbnail[0];
 
     // Upload to Cloudinary
     const bannerUpload = await uploadOnCloudinary(bannerFile.path);
     const videoUpload = await uploadOnCloudinary(videoFile.path);
+    const thumbnailUpload = await uploadOnCloudinary(thumbnail.path);
 
-    if (!bannerUpload || !videoUpload) {
+    if (!bannerUpload || !videoUpload || !thumbnailUpload) {
       return res
         .status(500)
         .json({ error: "Failed to upload media to Cloudinary" });
@@ -39,6 +41,7 @@ const createMedia = async (req, res) => {
       description,
       banner: bannerUpload.secure_url,
       video: videoUpload.secure_url,
+      thumbnail: thumbnailUpload.secure_url,
       categories: categories ? categories.split(",") : [],
       languages: languages ? languages.split(",") : [],
       cast: cast ? cast.split(",") : [],
