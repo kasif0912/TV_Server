@@ -14,7 +14,12 @@ const createMedia = async (req, res) => {
     } = req.body;
 
     // Check files
-    if (!req.files || !req.files.banner || !req.files.video || !req.files.thumbnail) {
+    if (
+      !req.files ||
+      !req.files.banner ||
+      !req.files.video ||
+      !req.files.thumbnail
+    ) {
       return res
         .status(400)
         .json({ error: "Banner, video and thumbnail files are required" });
@@ -22,12 +27,12 @@ const createMedia = async (req, res) => {
 
     const bannerFile = req.files.banner[0];
     const videoFile = req.files.video[0];
-    const thumbnail = req.files.thumbnail[0];
+    const thumbnailFile = req.files.thumbnail[0];
 
     // Upload to Cloudinary
     const bannerUpload = await uploadOnCloudinary(bannerFile.path);
     const videoUpload = await uploadOnCloudinary(videoFile.path);
-    const thumbnailUpload = await uploadOnCloudinary(thumbnail.path);
+    const thumbnailUpload = await uploadOnCloudinary(thumbnailFile.path);
 
     if (!bannerUpload || !videoUpload || !thumbnailUpload) {
       return res
@@ -109,9 +114,90 @@ const getMediaByCategory = async (req, res) => {
   }
 };
 
+const updateMedia = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const {
+      title,
+      description,
+      categories,
+      languages,
+      cast,
+      releaseYear,
+      rating,
+    } = req.body;
+
+    const updateData = {};
+
+    if (title) updateData.title = title;
+    if (description) updateData.description = description;
+    if (categories) updateData.categories = categories.split(",");
+    if (languages) updateData.languages = languages.split(",");
+    if (cast) updateData.cast = cast.split(",");
+    if (releaseYear) updateData.releaseYear = releaseYear;
+    if (rating) updateData.rating = rating;
+
+    // Handle media file updates if any
+    if (req.files) {
+      const { banner, video, thumbnail } = req.files;
+
+      if (banner && banner.length > 0) {
+        const bannerUpload = await uploadOnCloudinary(banner[0].path);
+        if (bannerUpload) updateData.banner = bannerUpload.secure_url;
+      }
+
+      if (video && video.length > 0) {
+        const videoUpload = await uploadOnCloudinary(video[0].path);
+        if (videoUpload) updateData.video = videoUpload.secure_url;
+      }
+
+      if (thumbnail && thumbnail.length > 0) {
+        const thumbnailUpload = await uploadOnCloudinary(thumbnail[0].path);
+        if (thumbnailUpload) updateData.thumbnail = thumbnailUpload.secure_url;
+      }
+    }
+
+    const updatedMedia = await Media.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+
+    if (!updatedMedia) {
+      return res.status(404).json({ error: "Media not found" });
+    }
+
+    res.status(200).json({ success: true, media: updatedMedia });
+  } catch (error) {
+    console.error("Update Media Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const deleteMedia = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // console.log(id);
+
+    const deletedMedia = await Media.findByIdAndDelete(id);
+
+    if (!deletedMedia) {
+      return res.status(404).json({ error: "Media not found" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Media deleted successfully" });
+  } catch (error) {
+    console.error("Delete Media Error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createMedia,
   getMediaByLanguage,
   getMediaByCategory,
   getAllMediaData,
+  updateMedia,
+  deleteMedia,
 };

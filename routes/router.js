@@ -13,7 +13,6 @@ router.post("/verify-otp", authController.verifyOtp);
 // get all user
 // router.get("/getAllUser", authController.getAllUsers);
 
-
 router.get("/allMedia", mediaController.getAllMediaData);
 // Get media by language
 router.get("/by-language", mediaController.getMediaByLanguage);
@@ -21,11 +20,10 @@ router.get("/by-language", mediaController.getMediaByLanguage);
 // Get media by category
 router.get("/by-category", mediaController.getMediaByCategory);
 
-
 // For admin
 
 router.post("/admin-login", authController.loginAdmin);
-router.post("/admin-register", authController.registerAdmin); 
+router.post("/admin-register", authController.registerAdmin);
 
 // Accepting video , banner and thumbnail as form-data
 router.post(
@@ -39,5 +37,17 @@ router.post(
   mediaController.createMedia
 );
 
+router.put(
+  "/update/:id",
+  isAdmin,
+  upload.fields([
+    { name: "banner", maxCount: 1 },
+    { name: "video", maxCount: 1 },
+    { name: "thumbnail", maxCount: 1 },
+  ]),
+  mediaController.updateMedia
+);
+
+router.delete("/delete/:id", isAdmin, mediaController.deleteMedia);
 
 module.exports = router;
