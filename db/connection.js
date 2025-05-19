@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 const mongoDBUrl = process.env.DATABASE;
 
@@ -9,5 +9,5 @@ const connectDB = () => {
     .catch(() => console.log("error with connecting database"));
 };
 
-module.exports = { connectDB };
+export default connectDB;
 
