@@ -51,3 +51,9 @@ router.put(
 router.delete("/delete/:id", isAdmin, mediaController.deleteMedia);
 
 module.exports = router;
+
+
+// for movie
+// upload route
+// get all movie
+// update/delete for single video
