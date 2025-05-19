@@ -1,27 +1,29 @@
 import { config } from "dotenv";
 config();
 
-import express, {urlencoded} from "express";
+import express, { urlencoded } from "express";
+import cors from "cors";
+import connectDB from "./db/connection.js";
+import userRoute from "./routes/userRoute/user.routes.js";
+import adminRoute from "./routes/adminRoute/admin.route.js";
+
 const app = express();
-import cors from 'cors'
-import connectDB from './db/connection.js'
 const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
-app.use(urlencoded({ extended: true }))
+app.use(urlencoded({ extended: true }));
 
-
+// routes
 app.get("/", (req, res) => {
   res.send("hello");
 });
-
-// routes
-import userRoute from "./routes/user.route.js";
-app.use("/api", userRoute);
-
+app.use("/api/user", userRoute);
+app.use("/api/admin", adminRoute);
 
 // database connection and listen to server
 connectDB()
-  .then(() => app.listen(PORT, () => console.log(`server running at port ${PORT}`)))
+  .then(() =>
+    app.listen(PORT, () => console.log(`server running at port ${PORT}`))
+  )
   .catch((err) => console.log("error : ", err));

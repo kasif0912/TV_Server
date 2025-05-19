@@ -1,5 +1,5 @@
-const Media = require("../models/media.schema");
-const { uploadOnCloudinary } = require("../utils/cloudinary");
+import Media from "../models/videoSchema/video.schema.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const createMedia = async (req, res) => {
   try {
@@ -193,7 +193,7 @@ const deleteMedia = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createMedia,
   getMediaByLanguage,
   getMediaByCategory,

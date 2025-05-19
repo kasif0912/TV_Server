@@ -1,15 +1,19 @@
-const express = require("express");
-const router = new express.Router();
-const authController = require("../../controller/auth.controller");
-const mediaController = require("../../controller/media.controller");
+import { Router } from "express";
+import { sendOtp, verifyOtp } from "../../controller/auth.controller.js";
+import {
+  getAllMediaData,
+  getMediaByCategory,
+  getMediaByLanguage,
+} from "../../controller/media.controller.js";
+const router = Router();
 
-// User auth
-router.post("/send-otp", authController.sendOtp);
-router.post("/verify-otp", authController.verifyOtp);
+// User
+router.route("/send-otp").post(sendOtp);
+router.route("/verify-otp").post(verifyOtp);
 
 // Media viewing
-router.get("/allMedia", mediaController.getAllMediaData);
-router.get("/by-language", mediaController.getMediaByLanguage);
-router.get("/by-category", mediaController.getMediaByCategory);
+router.route("/allMedia").post(getAllMediaData);
+router.route("/by-language").get(getMediaByLanguage);
+router.route("/by-genre").get(getMediaByCategory);
 
-module.exports = router;
+export default router;

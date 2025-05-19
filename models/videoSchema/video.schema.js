@@ -1,7 +1,7 @@
 // models/Media.js
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const mediaSchema = new mongoose.Schema(
+const videoSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -35,9 +35,6 @@ const mediaSchema = new mongoose.Schema(
       type: [String], // list of actor names
       default: [],
     },
-    // director: {
-    //   type: String,
-    // },
     releaseYear: {
       type: Date,
     },
@@ -52,5 +49,5 @@ const mediaSchema = new mongoose.Schema(
   }
 );
 
-const Media = mongoose.model("Media", mediaSchema);
-export default Media;
+const Video = mongoose.model(" Video", videoSchema);
+export default Video;

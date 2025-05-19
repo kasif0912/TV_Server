@@ -1,6 +1,6 @@
 import otpGenerator from "otp-generator";
 import twilio from "twilio";
-import User from "../models/user.schema.js";
+import User from "../models/userSchema/user.schema.js";
 import otpVerification from "../constants/otpValidate.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";

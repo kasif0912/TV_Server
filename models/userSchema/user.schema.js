@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const otpSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     phoneNumber: {
       type: String,
@@ -34,5 +34,5 @@ const otpSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const User = mongoose.model("User", otpSchema);
-module.exports = User;
+const User = mongoose.model("User", userSchema);
+export default User;
