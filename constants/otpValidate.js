@@ -18,4 +18,4 @@ const otpVerification = async (otpTime) => {
   }
 };
 
-module.exports = { otpVerification };
+export default otpVerification;

@@ -1,22 +1,27 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const router = require("./routes/router");
-const { connectDB } = require("./db/connection");
-const port = process.env.PORT || 4000;
+import { config } from "dotenv";
+config();
 
+import express, {urlencoded} from "express";
 const app = express();
-app.use(express.json());
-app.use(cors());
+import cors from 'cors'
+import connectDB from './db/connection.js'
+const PORT = process.env.PORT || 4000;
 
-// routes
-app.use("/api", router);
+app.use(cors());
+app.use(express.json());
+app.use(urlencoded({ extended: true }))
+
+
 app.get("/", (req, res) => {
   res.send("hello");
 });
 
+// routes
+import userRoute from "./routes/user.route.js";
+app.use("/api", userRoute);
+
 
 // database connection and listen to server
 connectDB()
-  .then(() => app.listen(port, () => console.log("server started")))
-  .catch(() => console.log("error"));
+  .then(() => app.listen(PORT, () => console.log(`server running at port ${PORT}`)))
+  .catch((err) => console.log("error : ", err));
