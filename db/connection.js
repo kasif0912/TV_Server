@@ -1,13 +1,10 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const mongoDBUrl = process.env.DATABASE;
-
-const connectDB = () => {
-  return mongoose
-    .connect(mongoDBUrl)
+const connectDB = async () => {
+  return await mongoose
+    .connect(process.env.DATABASE)
     .then(() => console.log("Database connnected successfully"))
     .catch(() => console.log("error with connecting database"));
 };
 
 export default connectDB;
-

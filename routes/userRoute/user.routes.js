@@ -12,7 +12,7 @@ router.route("/send-otp").post(sendOtp);
 router.route("/verify-otp").post(verifyOtp);
 
 // Media viewing
-router.route("/allMedia").post(getAllMediaData);
+router.route("/allMedia").get(getAllMediaData);
 router.route("/by-language").get(getMediaByLanguage);
 router.route("/by-genre").get(getMediaByCategory);
 
