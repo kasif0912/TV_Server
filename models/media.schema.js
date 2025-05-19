@@ -1,5 +1,5 @@
 // models/Media.js
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
 const mediaSchema = new mongoose.Schema(
   {
@@ -53,4 +53,4 @@ const mediaSchema = new mongoose.Schema(
 );
 
 const Media = mongoose.model("Media", mediaSchema);
-module.exports = Media;
+export default Media;

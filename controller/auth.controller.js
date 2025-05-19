@@ -1,9 +1,10 @@
-const otpGenerator = require("otp-generator");
-const twilio = require("twilio");
-const User = require("../models/user.schema");
-const { otpVerification } = require("../constants/otpValidate");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+import otpGenerator from "otp-generator";
+import twilio from "twilio";
+import User from "../models/user.schema.js";
+import otpVerification from "../constants/otpValidate.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -152,4 +153,11 @@ const loginAdmin = async (req, res) => {
   }
 };
 
-module.exports = { verifyOtp, sendOtp, loginAdmin, registerAdmin };
+// module.exports = { verifyOtp, sendOtp, loginAdmin, registerAdmin };
+
+export {
+  verifyOtp,
+  sendOtp,
+  loginAdmin,
+  registerAdmin
+};
