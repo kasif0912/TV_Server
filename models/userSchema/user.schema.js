@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    razorpayCustomerId: null
   },
   { timestamps: true }
 );

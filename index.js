@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDB from "./db/connection.js";
 import userRoute from "./routes/userRoute/user.routes.js";
 import adminRoute from "./routes/adminRoute/admin.route.js";
+import paymentRoute from './routes/payment/payment.route.js'
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api/payment", paymentRoute)
 
 // database connection and listen to server
 connectDB()
