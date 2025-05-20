@@ -4,6 +4,7 @@ import {
   getAllMediaData,
   getMediaByCategory,
   getMediaByLanguage,
+  getVideoByid,
 } from "../../controller/media.controller.js";
 const router = Router();
 
@@ -13,6 +14,7 @@ router.route("/verify-otp").post(verifyOtp);
 
 // Media viewing
 router.route("/allMedia").get(getAllMediaData);
+router.route("/video/:id").get(getVideoByid)
 router.route("/by-language").get(getMediaByLanguage);
 router.route("/by-genre").get(getMediaByCategory);
 

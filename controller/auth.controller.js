@@ -4,6 +4,7 @@ import User from "../models/userSchema/user.schema.js";
 import otpVerification from "../constants/otpValidate.js";
 import jwt from "../constants/jwtProvider.js";
 import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken"; 
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -73,7 +74,7 @@ const verifyOtp = async (req, res) => {
       });
     }
 
-    const token = await jwt.generateToken(otpData._id);
+    const token = jwt.generateToken(otpData._id);
 
     return res.status(200).json({
       success: true,
@@ -129,7 +130,7 @@ const loginAdmin = async (req, res) => {
         .json({ success: false, msg: "You are not an admin" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
         .status(400)
@@ -137,14 +138,10 @@ const loginAdmin = async (req, res) => {
     }
 
     // console.log(email);
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_KEY,
-      {
-        expiresIn: "1d",
-      }
-    );
-    // console.log(token);
+    const token = jsonwebtoken.sign({ id: user._id, role: user.role }, process.env.admin_key, {
+      expiresIn: "1d",
+    });
+    console.log(token);
 
     return res.status(200).json({
       success: true,

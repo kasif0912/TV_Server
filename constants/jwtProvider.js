@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
 
 const generateToken = (userID) => {
-  const token = jwt.sign({ userID }, process.env.JWT_KEY, { expiresIn: "48hr" });
+  const token = jwt.sign({ userID }, process.env.KEY, { expiresIn: "48hr" });
   return token;
 };
 
 const getUserIdByToken = (token) => {
-  const decodedToken = jwt.verify(token, secrey_key);
+  const decodedToken = jwt.verify(token, process.env.KEY);
   return decodedToken.userID;
 };
 
