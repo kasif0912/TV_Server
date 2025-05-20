@@ -43,6 +43,18 @@ const videoSchema = new mongoose.Schema(
       min: 0,
       max: 10,
     },
+    duration: {
+      type: Number,
+      required: true,
+    },
+    views: {
+      type: Number,
+      required: true,
+    },
+    free: {
+      type: Boolean,
+      required: true,
+    },
   },
   {
     timestamps: true,

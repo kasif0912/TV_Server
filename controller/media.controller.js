@@ -11,7 +11,11 @@ const createMedia = async (req, res) => {
       cast,
       releaseYear,
       rating,
+      views,
+      duration,
+      free,
     } = req.body;
+    // console.log(title);
 
     // Check files
     if (
@@ -27,12 +31,12 @@ const createMedia = async (req, res) => {
 
     const bannerFile = req.files.banner[0];
     const videoFile = req.files.video[0];
-    const thumbnailFile = req.files.thumbnail[0];
+    const thumbnail = req.files.thumbnail[0];
 
     // Upload to Cloudinary
     const bannerUpload = await uploadOnCloudinary(bannerFile.path);
     const videoUpload = await uploadOnCloudinary(videoFile.path);
-    const thumbnailUpload = await uploadOnCloudinary(thumbnailFile.path);
+    const thumbnailUpload = await uploadOnCloudinary(thumbnail.path);
 
     if (!bannerUpload || !videoUpload || !thumbnailUpload) {
       return res
@@ -52,6 +56,9 @@ const createMedia = async (req, res) => {
       cast: cast ? cast.split(",") : [],
       releaseYear,
       rating,
+      views,
+      duration,
+      free,
     });
 
     await media.save();
@@ -94,6 +101,29 @@ const getAllMediaData = async (req, res) => {
   }
 };
 
+// for getting a single video details
+const getVideoByid = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: "Video id is required" });
+    }
+
+    const video = await Media.findById(id);
+    if (!video) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Video not found by this id" });
+    }
+
+    return res.status(200).json({ success: true, video });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to retrieve video data" });
+  }
+};
+
+// getMediaByCategory
 const getMediaByCategory = async (req, res) => {
   try {
     let { category } = req.query;
@@ -114,10 +144,11 @@ const getMediaByCategory = async (req, res) => {
   }
 };
 
+// for update
 const updateMedia = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
+    // console.log(id);
     const {
       title,
       description,
@@ -126,6 +157,9 @@ const updateMedia = async (req, res) => {
       cast,
       releaseYear,
       rating,
+      views,
+      duration,
+      free,
     } = req.body;
 
     const updateData = {};
@@ -137,6 +171,9 @@ const updateMedia = async (req, res) => {
     if (cast) updateData.cast = cast.split(",");
     if (releaseYear) updateData.releaseYear = releaseYear;
     if (rating) updateData.rating = rating;
+    if (free) updateData.free = free;
+    if (duration) updateData.duration = duration;
+    if (views) updateData.views = views;
 
     // Handle media file updates if any
     if (req.files) {
@@ -173,6 +210,7 @@ const updateMedia = async (req, res) => {
   }
 };
 
+// for delete
 const deleteMedia = async (req, res) => {
   try {
     const { id } = req.params;
@@ -200,4 +238,5 @@ export {
   getAllMediaData,
   updateMedia,
   deleteMedia,
+  getVideoByid,
 };
