@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
     createOrder
-} from '../../controller/payment.controller'
+} from '../../controller/payment.controller.js'
 
 
 const router = Router();

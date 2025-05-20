@@ -1,6 +1,8 @@
-import razorPay from "../config/razorpay.config.js";
 import User from "../models/userSchema/user.schema.js";
 import razorpay from "../config/razorpay.config.js";
+
+import crypto from "crypto";
+import moment from "moment";
 
 const subscriptionPlans = {
   basic: { name: "Basic Plan", amount: 99, durationMonths: 3 },
@@ -11,7 +13,7 @@ const subscriptionPlans = {
 
 const createOrder = async (req, res) => {
   const { planKey } = req.body; // 'basic', 'standard', etc.
-  const userId = req.user;
+  const user = req.user;
 
   const plan = subscriptionPlans[planKey];
   if (!plan) {
@@ -89,12 +91,10 @@ const verifyPayment = async (req, res) => {
 
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Payment verified and subscription activated.",
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Payment verified and subscription activated.",
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ success: false, error: err.message });

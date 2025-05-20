@@ -3,9 +3,8 @@ import User from "../models/userSchema/user.schema.js";
 
 const authenticate = async (req, res, next) => {
   try {
-    const token =
-      req.cookies?.accessToken || req.headers.authorization?.split(" ")[1];
-    console.log(token);
+    const token = req.headers.authorization?.split(" ")[1];
+    // console.log(token);
     if (!token) {
       return res.status(400).json("token not found");
     }
@@ -15,7 +14,7 @@ const authenticate = async (req, res, next) => {
       throw new Error("user not found");
     }
     req.user = user;
-    req.userID = userID;
+
     next();
   } catch (error) {
     res.status(401).send("Unauthorized:No token provided");

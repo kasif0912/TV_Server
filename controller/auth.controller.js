@@ -40,7 +40,7 @@ const sendOtp = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      msg: otp,
+    
     });
   } catch (error) {
     return res.status(400).json({
@@ -57,7 +57,7 @@ const verifyOtp = async (req, res) => {
       phoneNumber,
       otp,
     });
-    console.log(otpData._id);
+    // console.log(otpData._id);
 
     if (!otpData) {
       return res.status(400).json({
