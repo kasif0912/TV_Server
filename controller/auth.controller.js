@@ -2,9 +2,8 @@ import otpGenerator from "otp-generator";
 import twilio from "twilio";
 import User from "../models/userSchema/user.schema.js";
 import otpVerification from "../constants/otpValidate.js";
-import jwt from "jsonwebtoken";
+import jwt from "../constants/jwtProvider.js";
 import bcrypt from "bcrypt";
-
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -57,6 +56,7 @@ const verifyOtp = async (req, res) => {
       phoneNumber,
       otp,
     });
+    console.log(otpData._id);
 
     if (!otpData) {
       return res.status(400).json({
@@ -73,9 +73,12 @@ const verifyOtp = async (req, res) => {
       });
     }
 
+    const token = await jwt.generateToken(otpData._id);
+
     return res.status(200).json({
       success: true,
       msg: "OTP verified successfully",
+      token,
     });
   } catch (error) {
     return res.status(400).json({
@@ -155,9 +158,4 @@ const loginAdmin = async (req, res) => {
 
 // module.exports = { verifyOtp, sendOtp, loginAdmin, registerAdmin };
 
-export {
-  verifyOtp,
-  sendOtp,
-  loginAdmin,
-  registerAdmin
-};
+export { verifyOtp, sendOtp, loginAdmin, registerAdmin };
