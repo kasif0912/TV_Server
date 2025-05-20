@@ -1,15 +1,8 @@
 import User from "../models/userSchema/user.schema.js";
 import razorpay from "../config/razorpay.config.js";
-
 import crypto from "crypto";
 import moment from "moment";
-
-const subscriptionPlans = {
-  basic: { name: "Basic Plan", amount: 99, durationMonths: 3 },
-  standard: { name: "Standard Plan", amount: 299, durationMonths: 3 },
-  premium: { name: "Premium Plan", amount: 999, durationMonths: 6 },
-  gold: { name: "Gold Plan", amount: 1200, durationMonths: 12 },
-};
+import subscriptionPlans from '../constants/subscription_plans.js'
 
 const createOrder = async (req, res) => {
   const { planKey } = req.body; // 'basic', 'standard', etc.
@@ -38,6 +31,7 @@ const createOrder = async (req, res) => {
       currency: order.currency,
       planName: plan.name,
       durationMonths: plan.durationMonths,
+      key: process.env.RAZORPAY_KEY_ID,
     });
   } catch (err) {
     console.error(err);
