@@ -30,6 +30,18 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    isSubscribed: {
+      type: Boolean,
+      default: false,
+    },
+    customerId: {
+      type: String,
+      default: null,
+    },
+    subscription: {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Subscription"
+    },
   },
   { timestamps: true }
 );
