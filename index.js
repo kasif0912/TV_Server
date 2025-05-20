@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
 });
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
-app.use("/api/payment", paymentRoute)
+app.use("/api/checkout", paymentRoute)
 
 // database connection and listen to server
 connectDB()
