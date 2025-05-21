@@ -50,13 +50,6 @@ const verifyPayment = async (req, res) => {
   } = req.body;
   const userId = req.user;
 
-  console.log("User ID:", userId);
-  console.log("Razorpay Order ID:", razorpay_order_id);
-  console.log("Razorpay Payment ID:", razorpay_payment_id);
-  console.log("Razorpay Signature:", razorpay_signature);
-  console.log("Plan Key:", planKey);
-  console.log("Plan Key:", planKey);
-
   const plan = subscriptionPlans[planKey];
   if (!plan) {
     return res.status(400).json({ success: false, message: "Invalid subscription plan." });

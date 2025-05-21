@@ -2,11 +2,13 @@ import { Router } from "express";
 import { loginAdmin, registerAdmin } from "../../controller/auth.controller.js";
 import isAdmin from "../../middleware/isAdmin.js";
 import {
-  createMedia,
-  deleteMedia,
-  getAllMediaData,
-  updateMedia,
-} from "../../controller/media.controller.js";
+  createMovie,
+  getAllMovies,
+  searchMovies,
+  getMovieById,
+  updateMovie,
+  deleteMovie,
+} from "../../controller/movies.controller.js";
 import upload from "../../middleware/multer.middleware.js";
 const router = Router();
 
@@ -14,32 +16,19 @@ const router = Router();
 router.route("/admin-login").post(loginAdmin);
 router.route("/admin-register").post(registerAdmin);
 
-// upload
-router.route("/upload").post(
-  isAdmin,
-  upload.fields([
-    { name: "banner", maxCount: 1 },
-    { name: "video", maxCount: 1 },
-    { name: "thumbnail", maxCount: 1 },
-  ]),
-  createMedia
+router.post(
+  "/movies",
+  upload.fields([{ name: "banner" }, { name: "thumbnail" }]),
+  createMovie
 );
-
-// allMovie
-router.route("/allMedia").get(getAllMediaData);
-
-// update
-router.route("/update/:id").put(
-  isAdmin,
-  upload.fields([
-    { name: "banner", maxCount: 1 },
-    { name: "video", maxCount: 1 },
-    { name: "thumbnail", maxCount: 1 },
-  ]),
-  updateMedia
+router.get("/movies", getAllMovies);
+router.get("/movies/search", searchMovies);
+router.get("/movies/:id", getMovieById);
+router.patch(
+  "/movies/:id",
+  upload.fields([{ name: "banner" }, { name: "thumbnail" }]),
+  updateMovie
 );
-
-// delete
-router.route("/delete/:id").delete(isAdmin, deleteMedia);
+router.delete("/movies/:id", deleteMovie);
 
 export default router;
