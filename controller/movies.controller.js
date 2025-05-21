@@ -201,6 +201,86 @@ const searchAndFilterMovies = async (req, res) => {
   }
 };
 
+const getDashboardOverview = async (req, res) => {
+  try {
+    const [
+      totalMovies,
+      totalSeries,
+      totalUsers,
+      totalViewsAgg,
+      activeSubscriptions,
+      totalRevenueAgg,
+      recentMovies,
+      recentUsers,
+      topViewedMovies,
+      revenueByMonth,
+      subscriptionBreakdown,
+      contentTypeDistribution,
+      languageDistribution,
+    ] = await Promise.all([
+      Movie.countDocuments({ type: "movie" }),
+      Movie.countDocuments({ type: "series" }),
+      User.countDocuments(),
+      Movie.aggregate([{ $group: { _id: null, total: { $sum: "$views" } } }]),
+      Subscription.countDocuments({ status: "active" }),
+      Payment.aggregate([
+        { $match: { status: "success" } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]),
+      Movie.find().sort({ createdAt: -1 }).limit(5),
+      User.find().sort({ createdAt: -1 }).limit(5),
+      Movie.find().sort({ views: -1 }).limit(10),
+
+      Payment.aggregate([
+        { $match: { status: "success" } },
+        {
+          $group: {
+            _id: { $substr: ["$createdAt", 0, 7] },
+            total: { $sum: "$amount" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
+
+      Subscription.aggregate([
+        { $group: { _id: "$planName", count: { $sum: 1 } } },
+      ]),
+
+      Movie.aggregate([{ $group: { _id: "$type", count: { $sum: 1 } } }]),
+
+      Movie.aggregate([
+        { $group: { _id: "$language", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 6 },
+      ]),
+    ]);
+
+    res.json({
+      success: true,
+      data: {
+        summary: {
+          totalMovies,
+          totalSeries,
+          totalUsers,
+          totalViews: totalViewsAgg[0]?.total || 0,
+          activeSubscriptions,
+          totalRevenue: totalRevenueAgg[0]?.total || 0,
+        },
+        recentMovies,
+        recentUsers,
+        topViewedMovies,
+        charts: {
+          revenueByMonth,
+          subscriptionBreakdown,
+          contentTypeDistribution,
+          languageDistribution,
+        },
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
 export {
   createMovie,
   getAllMovies,
@@ -209,4 +289,5 @@ export {
   updateMovie,
   deleteMovie,
   searchAndFilterMovies,
+  getDashboardOverview,
 };
