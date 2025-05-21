@@ -9,6 +9,7 @@ import {
   updateMovie,
   deleteMovie,
   searchAndFilterMovies,
+  getDashboardOverview,
 } from "../../controller/movies.controller.js";
 import upload from "../../middleware/multer.middleware.js";
 const router = Router();
@@ -31,8 +32,8 @@ router.patch(
   updateMovie
 );
 
-
 router.get("/movies/search", searchMovies);
 router.get("/movies/filter", searchAndFilterMovies);
+router.get("/dashboard", getDashboardOverview);
 
 export default router;
