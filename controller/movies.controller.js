@@ -37,16 +37,16 @@ const createMovie = async (req, res) => {
       });
     }
 
-    if (!req.files || !req.files.banner || !req.files.thumbnail) {
+    if (!req.files || !req.files.bannerUrl || !req.files.thumbnailUrl) {
       return res.status(400).json({
         success: false,
         message: "Banner and thumbnail images are required.",
       });
     }
 
-    const serverUrl = process.env.SERVER_URL || "http://localhost:5000";
-    const bannerUrl = `${serverUrl}/temp/${req.files.banner[0].filename}`;
-    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnail[0].filename}`;
+    const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
+    const bannerUrl = `${serverUrl}/temp/${req.files.bannerUrl[0].filename}`;
+    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnailUrl[0].filename}`;
 
     const movie = await Movie.create({
       title,
@@ -77,16 +77,7 @@ const createMovie = async (req, res) => {
 };
 const getAllMovies = async (req, res) => {
   try {
-    const { genre, language, releaseYear, isFree, type } = req.query;
-    const filter = {};
-
-    if (genre) filter.genre = genre;
-    if (language) filter.language = language;
-    if (releaseYear) filter.releaseYear = releaseYear;
-    if (isFree !== undefined) filter.isFree = isFree === "true";
-    if (type) filter.type = type;
-
-    const movies = await Movie.find(filter).sort({ createdAt: -1 });
+    const movies = await Movie.find().sort({ createdAt: -1 });
     return res.status(200).json({ success: true, movies });
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });
@@ -182,6 +173,35 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+
+const searchAndFilterMovies = async (req, res) => {
+  try {
+    const { query, genre, language, releaseYear, isFree, type } = req.query;
+    const searchRegex = query ? new RegExp(query, "i") : null;
+    const filter = {};
+    if (genre) filter.genre = genre;
+    if (language) filter.language = language;
+    if (releaseYear) filter.releaseYear = releaseYear;
+    if (isFree !== undefined) filter.isFree = isFree === "true";
+    if (type) filter.type = type;
+    if (searchRegex) {
+      filter.$or = [
+        { title: searchRegex },
+        { description: searchRegex },
+        { genre: searchRegex },
+        { language: searchRegex },
+        { cast: searchRegex },
+        { director: searchRegex },
+        { tags: searchRegex }
+      ];
+    }
+    const movies = await Movie.find(filter).sort({ createdAt: -1 });
+    return res.status(200).json({ success: true, movies });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+};
+
 export {
   createMovie,
   getAllMovies,
@@ -189,4 +209,5 @@ export {
   getMovieById,
   updateMovie,
   deleteMovie,
+  searchAndFilterMovies
 };

@@ -8,6 +8,7 @@ import {
   getMovieById,
   updateMovie,
   deleteMovie,
+  searchAndFilterMovies,
 } from "../../controller/movies.controller.js";
 import upload from "../../middleware/multer.middleware.js";
 const router = Router();
@@ -18,17 +19,20 @@ router.route("/admin-register").post(registerAdmin);
 
 router.post(
   "/movies",
-  upload.fields([{ name: "banner" }, { name: "thumbnail" }]),
+  upload.fields([{ name: "bannerUrl" }, { name: "thumbnailUrl" }]),
   createMovie
 );
 router.get("/movies", getAllMovies);
-router.get("/movies/search", searchMovies);
 router.get("/movies/:id", getMovieById);
+router.delete("/movie/delete/:id", deleteMovie);
 router.patch(
-  "/movies/:id",
-  upload.fields([{ name: "banner" }, { name: "thumbnail" }]),
+  "/movies/update/:id",
+  upload.fields([{ name: "bannerUrl" }, { name: "thumbnailUrl" }]),
   updateMovie
 );
-router.delete("/movies/:id", deleteMovie);
+
+
+router.get("/movies/search", searchMovies);
+router.get("/movies/filter", searchAndFilterMovies);
 
 export default router;

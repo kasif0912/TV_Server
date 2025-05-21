@@ -144,7 +144,7 @@ const loginAdmin = async (req, res) => {
     const token = jsonwebtoken.sign({ id: user._id, role: user.role }, process.env.admin_key, {
       expiresIn: "1d",
     });
-    console.log(token);
+    // console.log(token);
 
     return res.status(200).json({
       success: true,
