@@ -45,8 +45,8 @@ const createMovie = async (req, res) => {
     }
 
     const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
-    const bannerUrl = `${serverUrl}/temp/${req.files.bannerUrl[0].filename}`;
-    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnailUrl[0].filename}`;
+    const bannerUrl = `${serverUrl}/temp/${req.files.banner[0].filename}`;
+    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnail[0].filename}`;
 
     const movie = await Movie.create({
       title,
@@ -173,7 +173,6 @@ const deleteMovie = async (req, res) => {
   }
 };
 
-
 const searchAndFilterMovies = async (req, res) => {
   try {
     const { query, genre, language, releaseYear, isFree, type } = req.query;
@@ -192,7 +191,7 @@ const searchAndFilterMovies = async (req, res) => {
         { language: searchRegex },
         { cast: searchRegex },
         { director: searchRegex },
-        { tags: searchRegex }
+        { tags: searchRegex },
       ];
     }
     const movies = await Movie.find(filter).sort({ createdAt: -1 });
@@ -209,5 +208,5 @@ export {
   getMovieById,
   updateMovie,
   deleteMovie,
-  searchAndFilterMovies
+  searchAndFilterMovies,
 };
