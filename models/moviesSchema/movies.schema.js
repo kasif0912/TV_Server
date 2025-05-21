@@ -12,6 +12,7 @@ const movieSchema = new mongoose.Schema(
     director: { type: String, required: true },
     bannerUrl: { type: String, required: true },
     thumbnailUrl: { type: String, required: true },
+    trailerUrl: { type: String, required: true },
     duration: { type: String, required: true },
     isPublished: { type: Boolean, default: false },
     views: { type: Number, default: 0 },

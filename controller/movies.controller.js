@@ -20,6 +20,7 @@ const createMovie = async (req, res) => {
       featured,
       trending,
       tags,
+      trailerUrl,
     } = req.body;
 
     if (
@@ -36,6 +37,7 @@ const createMovie = async (req, res) => {
         message: "All required fields must be provided.",
       });
     }
+    // console.log(req.files);
 
     if (!req.files || !req.files.bannerUrl || !req.files.thumbnailUrl) {
       return res.status(400).json({
@@ -45,8 +47,8 @@ const createMovie = async (req, res) => {
     }
 
     const serverUrl = process.env.SERVER_URL || "http://localhost:4000";
-    const bannerUrl = `${serverUrl}/temp/${req.files.banner[0].filename}`;
-    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnail[0].filename}`;
+    const bannerUrl = `${serverUrl}/temp/${req.files.bannerUrl[0].filename}`;
+    const thumbnailUrl = `${serverUrl}/temp/${req.files.thumbnailUrl[0].filename}`;
 
     const movie = await Movie.create({
       title,
@@ -60,6 +62,7 @@ const createMovie = async (req, res) => {
       qualityLinks,
       bannerUrl,
       thumbnailUrl,
+      trailerUrl,
       views,
       rating,
       isFree,

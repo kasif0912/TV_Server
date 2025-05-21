@@ -24,6 +24,11 @@ router.post(
   createMovie
 );
 router.get("/movies", getAllMovies);
+
+router.get("/movies/search", searchMovies);
+router.get("/movies/filter", searchAndFilterMovies);
+
+
 router.get("/movies/:id", getMovieById);
 router.delete("/movie/delete/:id", deleteMovie);
 router.patch(
@@ -32,8 +37,6 @@ router.patch(
   updateMovie
 );
 
-router.get("/movies/search", searchMovies);
-router.get("/movies/filter", searchAndFilterMovies);
 router.get("/dashboard", getDashboardOverview);
 
 export default router;
