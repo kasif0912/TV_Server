@@ -3,6 +3,8 @@ import razorpay from "../config/razorpay.config.js";
 import crypto from "crypto";
 import moment from "moment";
 import subscriptionPlans from '../constants/subscription_plans.js'
+import Subscription from "../models/subscriptionPlan/subscriptionSchema.js";
+import Payment from "../models/paymentSchema/paymentSchema.js";
 
 const createOrder = async (req, res) => {
   const { planKey } = req.body; // 'basic', 'standard', etc.
@@ -44,9 +46,16 @@ const verifyPayment = async (req, res) => {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    planKey,
+    planKey,  
   } = req.body;
   const userId = req.user;
+
+  console.log("User ID:", userId);
+  console.log("Razorpay Order ID:", razorpay_order_id);
+  console.log("Razorpay Payment ID:", razorpay_payment_id);
+  console.log("Razorpay Signature:", razorpay_signature);
+  console.log("Plan Key:", planKey);
+  console.log("Plan Key:", planKey);
 
   const plan = subscriptionPlans[planKey];
   if (!plan) {
@@ -77,7 +86,7 @@ const verifyPayment = async (req, res) => {
     const subscription = await Subscription.create({
       user: user._id,
       planName: plan.name,
-      price: plan.price,
+      price: plan.amount,
       validTill,
       paymentId: razorpay_payment_id,
       status: "active",
@@ -87,7 +96,7 @@ const verifyPayment = async (req, res) => {
     await Payment.create({
       user: user._id,
       subscription: subscription._id,
-      amount: plan.price,
+      amount: plan.amount,
       currency: "INR",
       paymentId: razorpay_payment_id,
       status: "success",
@@ -104,7 +113,7 @@ const verifyPayment = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ success: false, error: err.message });
+    return res.status(500).json({ success: false, error: err });
   }
 };
 

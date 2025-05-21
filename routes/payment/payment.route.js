@@ -3,6 +3,7 @@ import {
     createOrder,
     verifyPayment
 } from '../../controller/payment.controller.js'
+import authenticate from '../../middleware/authenticate.js'
 
 
 const router = Router();
@@ -16,6 +17,7 @@ router.route("/create-order").post(
 
 router.route("/verify-payment").post(
     // 2. integrate verifyJWT here ----->skipping for now, will add later
+    authenticate,
     verifyPayment
 )
 
