@@ -50,39 +50,52 @@ const verifyPayment = async (req, res) => {
 
   const plan = subscriptionPlans[planKey];
   if (!plan) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid subscription plan." });
+    return res.status(400).json({ success: false, message: "Invalid subscription plan." });
   }
 
   try {
+    // 1. Verify Razorpay signature
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
       .update(razorpay_order_id + "|" + razorpay_payment_id)
       .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid signature" });
+      return res.status(400).json({ success: false, message: "Invalid signature" });
     }
 
+    // 2. Fetch user
     const user = await User.findById(userId);
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
+    // 3. Calculate expiry
     const validTill = moment().add(plan.durationMonths, "months").toDate();
 
-    user.subscription = {
-      plan: plan.name,
-      paymentId: razorpay_payment_id,
+    // 4. Create Subscription
+    const subscription = await Subscription.create({
+      user: user._id,
+      planName: plan.name,
+      price: plan.price,
       validTill,
+      paymentId: razorpay_payment_id,
       status: "active",
-    };
+    });
 
+    // 5. Create Payment record
+    await Payment.create({
+      user: user._id,
+      subscription: subscription._id,
+      amount: plan.price,
+      currency: "INR",
+      paymentId: razorpay_payment_id,
+      status: "success",
+    });
+
+    // 6. Update user
+    user.subscription = subscription._id;
+    user.isSubscribed = true;
     await user.save();
 
     return res.status(200).json({
@@ -94,5 +107,6 @@ const verifyPayment = async (req, res) => {
     return res.status(500).json({ success: false, error: err.message });
   }
 };
+
 
 export { createOrder, verifyPayment };
