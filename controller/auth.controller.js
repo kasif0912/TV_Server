@@ -15,7 +15,7 @@ const sendOtp = async (req, res) => {
   console.log("sendOtp called");
   try {
     const { phoneNumber } = req.body;
-    // console.log(phoneNumber);
+    console.log(phoneNumber);
     if (!phoneNumber) {
       return res.status(400).json({ msg: "Phone number is required" });
     }
