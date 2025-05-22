@@ -20,23 +20,24 @@ router.route("/admin-register").post(registerAdmin);
 
 router.post(
   "/movies",
+  isAdmin,
   upload.fields([{ name: "bannerUrl" }, { name: "thumbnailUrl" }]),
   createMovie
 );
-router.get("/movies", getAllMovies);
+router.get("/movies", isAdmin, getAllMovies);
 
-router.get("/movies/search", searchMovies);
-router.get("/movies/filter", searchAndFilterMovies);
+router.get("/movies/search", isAdmin, searchMovies);
+router.get("/movies/filter", isAdmin, searchAndFilterMovies);
 
-
-router.get("/movies/:id", getMovieById);
-router.delete("/movie/delete/:id", deleteMovie);
+router.get("/movies/:id", isAdmin, getMovieById);
+router.delete("/movie/delete/:id", isAdmin, deleteMovie);
 router.patch(
   "/movies/update/:id",
+  isAdmin,
   upload.fields([{ name: "bannerUrl" }, { name: "thumbnailUrl" }]),
   updateMovie
 );
 
-router.get("/dashboard", getDashboardOverview);
+router.get("/dashboard", isAdmin, getDashboardOverview);
 
 export default router;

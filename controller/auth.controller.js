@@ -6,7 +6,7 @@ import User from "../models/userSchema/user.schema.js";
 import otpVerification from "../constants/otpValidate.js";
 import jwt from "../constants/jwtProvider.js";
 import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken"; 
+import jsonwebtoken from "jsonwebtoken";
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -42,7 +42,6 @@ const sendOtp = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-    
     });
   } catch (error) {
     return res.status(400).json({
@@ -76,7 +75,7 @@ const verifyOtp = async (req, res) => {
       });
     }
 
-    console.log("working ")
+    console.log("working ");
 
     const token = jwt.generateToken(otpData._id);
 
@@ -142,15 +141,20 @@ const loginAdmin = async (req, res) => {
     }
 
     // console.log(email);
-    const token = jsonwebtoken.sign({ id: user._id, role: user.role }, process.env.admin_key, {
-      expiresIn: "1d",
-    });
+    const token = jsonwebtoken.sign(
+      { id: user._id, role: user.role },
+      process.env.admin_key,
+      {
+        expiresIn: "1d",
+      }
+    );
     // console.log(token);
 
     return res.status(200).json({
       success: true,
       msg: "Admin login successful",
       token,
+      role: user?.role,
     });
   } catch (err) {
     return res.status(500).json({ success: false, msg: err.message });

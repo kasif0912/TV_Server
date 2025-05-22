@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("App is running...");
 });
 app.use("/api/user", userRoute);
-app.use("/api/admin",isAdmin, adminRoute);
+app.use("/api/admin", adminRoute);
 app.use("/api/checkout", paymentRoute);
 
 // database connection and listen to server
