@@ -1,3 +1,5 @@
+import { config } from "dotenv";
+config();
 import otpGenerator from "otp-generator";
 import twilio from "twilio";
 import User from "../models/userSchema/user.schema.js";
@@ -12,7 +14,6 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = new twilio(accountSid, authToken);
 
 const sendOtp = async (req, res) => {
-  console.log("sendOtp called");
   try {
     const { phoneNumber } = req.body;
     console.log(phoneNumber);
