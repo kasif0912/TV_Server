@@ -21,6 +21,7 @@ const createMovie = async (req, res) => {
       trending,
       tags,
       trailerUrl,
+      isPublished,
     } = req.body;
 
     if (
@@ -37,7 +38,7 @@ const createMovie = async (req, res) => {
         message: "All required fields must be provided.",
       });
     }
-    // console.log(req.files);
+    // console.log(req.body);
 
     if (!req.files || !req.files.bannerUrl || !req.files.thumbnailUrl) {
       return res.status(400).json({
@@ -71,6 +72,7 @@ const createMovie = async (req, res) => {
       featured,
       trending,
       tags,
+      isPublished,
     });
 
     return res.status(201).json({ success: true, movie });
