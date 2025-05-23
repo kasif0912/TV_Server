@@ -1,5 +1,7 @@
 import Movie from "../models/moviesSchema/movies.schema.js";
-
+import Payment from "../models/paymentSchema/paymentSchema.js";
+import User from "../models/userSchema/user.schema.js";
+import Subscription from "../models/subscriptionPlan/subscriptionSchema.js"
 const createMovie = async (req, res) => {
   try {
     const {
