@@ -24,6 +24,11 @@ const subscriptionSchema = new mongoose.Schema(
       enum: ["active", "expired"],
       default: "active",
     },
+    deviceType: {
+      type: [String],
+      enum: ["mobile", "laptop", "tablet", "tv"],
+      required: true,
+    },
     paymentId: {
       type: String,
     }, // razorpay_payment_id

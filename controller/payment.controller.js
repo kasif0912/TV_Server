@@ -2,7 +2,7 @@ import User from "../models/userSchema/user.schema.js";
 import razorpay from "../config/razorpay.config.js";
 import crypto from "crypto";
 import moment from "moment";
-import subscriptionPlans from '../constants/subscription_plans.js'
+import subscriptionPlans from "../constants/subscription_plans.js";
 import Subscription from "../models/subscriptionPlan/subscriptionSchema.js";
 import Payment from "../models/paymentSchema/paymentSchema.js";
 
@@ -46,13 +46,16 @@ const verifyPayment = async (req, res) => {
     razorpay_order_id,
     razorpay_payment_id,
     razorpay_signature,
-    planKey,  
+    planKey,
   } = req.body;
   const userId = req.user;
+  console.log("User ID:", userId);
 
   const plan = subscriptionPlans[planKey];
   if (!plan) {
-    return res.status(400).json({ success: false, message: "Invalid subscription plan." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid subscription plan." });
   }
 
   try {
@@ -63,13 +66,17 @@ const verifyPayment = async (req, res) => {
       .digest("hex");
 
     if (generatedSignature !== razorpay_signature) {
-      return res.status(400).json({ success: false, message: "Invalid signature" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid signature" });
     }
 
     // 2. Fetch user
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // 3. Calculate expiry
@@ -83,6 +90,7 @@ const verifyPayment = async (req, res) => {
       validTill,
       paymentId: razorpay_payment_id,
       status: "active",
+      deviceType: plan.deviceType,
     });
 
     // 5. Create Payment record
@@ -109,6 +117,5 @@ const verifyPayment = async (req, res) => {
     return res.status(500).json({ success: false, error: err });
   }
 };
-
 
 export { createOrder, verifyPayment };
