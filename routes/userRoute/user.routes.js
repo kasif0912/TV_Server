@@ -14,6 +14,6 @@ router.route("/verify-otp").post(verifyOtp);
 
 //
 router.get("/users", getAllUsersWithSubscriptions);
-router.get("/device-access-check").get(authenticate, checkVideoAccess);
+// router.get("/device-access-check").get(authenticate,);
 
 export default router;
