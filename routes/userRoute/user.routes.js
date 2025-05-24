@@ -2,10 +2,7 @@ import { Router } from "express";
 import { sendOtp, verifyOtp } from "../../controller/auth.controller.js";
 
 import authenticate from "../../middleware/authenticate.js";
-import {
-  getAllUsersWithSubscriptions,
-  checkVideoAccess,
-} from "../../controller/user.controller.js";
+import { getAllUsersWithSubscriptions } from "../../controller/user.controller.js";
 const router = Router();
 
 // User
